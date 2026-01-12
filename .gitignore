@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+stemtivistas_backend/__pycache__/
+stemtivistas_backend/venv/
+
+stemtivistas_backend/.env
+stemtivistas_frontend/.env
+stemtivistas_frontend/.next/
+stemtivistas_frontend/node_modules/
 # Distribution / packaging
 .Python
 build/
