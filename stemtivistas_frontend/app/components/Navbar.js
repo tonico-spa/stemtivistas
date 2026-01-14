@@ -54,8 +54,9 @@ export default function Navbar() {
 
   const navItems = [
     { id: 'mission', label: 'Mision' },
-    { id: 'activities', label: 'Actividades' },
     { id: 'participate', label: 'Participa' },
+
+    { id: 'activities', label: 'Actividades' },
     { id: 'contact', label: 'Contacto' }
   ]
 

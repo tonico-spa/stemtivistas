@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import axios from 'axios'
 import styles from './Home.module.css'
 
 /**
@@ -13,6 +14,12 @@ export default function Home() {
     const [apiData, setApiData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: ''
+    })
+    const [formStatus, setFormStatus] = useState('')
 
     /**
      * Fetch data from Flask backend API
@@ -22,12 +29,9 @@ export default function Home() {
         const fetchContactData = async () => {
             setLoading(true)
             try {
-                const response = await fetch('http://localhost:5000/api/hello')
-                if (!response.ok) {
-                    throw new Error('Failed to fetch from backend')
-                }
-                const data = await response.json()
-                setApiData(data)
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+                const response = await axios.get(`${apiUrl}/api/hello`)
+                setApiData(response.data)
             } catch (err) {
                 setError(err.message)
             } finally {
@@ -37,6 +41,42 @@ export default function Home() {
 
         fetchContactData()
     }, [])
+
+    /**
+     * Handle form input changes
+     */
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    /**
+     * Handle form submission
+     */
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setFormStatus('Enviando...')
+        
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+            const response = await axios.post(`${apiUrl}/api/send_form`, {
+                name: formData.name,
+                email: formData.email,
+                message: formData.message
+            })
+
+            setFormStatus('¡Mensaje enviado con éxito!')
+            setFormData({ name: '', email: '', message: '' })
+            setTimeout(() => setFormStatus(''), 5000)
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || err.message || 'Error al enviar el mensaje'
+            setFormStatus(`Error: ${errorMessage}`)
+            setTimeout(() => setFormStatus(''), 5000)
+        }
+    }
 
     return (
         <main className={styles.main}>
@@ -56,30 +96,30 @@ export default function Home() {
 
                     {/* Services Grid */}
                     <div className={styles.servicesGrid}>
-                        <div className={styles.serviceBox}>
+                        <div className={`${styles.serviceBox} ${styles.serviceBox1}`}>
                             <div className={styles.serviceImage}>
-                                <img src="/service1.png" alt="Workshops" />
+                                <img src="/k12.png" alt="Workshops" />
                             </div>
                             <h3 className={styles.serviceTitle}>Talleres K-12</h3>
                         </div>
 
-                        <div className={styles.serviceBox}>
+                        <div className={`${styles.serviceBox} ${styles.serviceBox2}`}>
                             <div className={styles.serviceImage}>
-                                <img src="/service2.png" alt="Competitions" />
+                                <img src="/comunidades.png" alt="Competitions" />
                             </div>
                             <h3 className={styles.serviceTitle}>Creación de Comunidades</h3>
                         </div>
 
-                        <div className={styles.serviceBox}>
+                        <div className={`${styles.serviceBox} ${styles.serviceBox3}`}>
                             <div className={styles.serviceImage}>
-                                <img src="/service3.png" alt="Mentorship" />
+                                <img src="/capacitacion.png" alt="Mentorship" />
                             </div>
                             <h3 className={styles.serviceTitle}>Capacitación docente</h3>
                         </div>
 
-                        <div className={styles.serviceBox}>
+                        <div className={`${styles.serviceBox} ${styles.serviceBox4}`}>
                             <div className={styles.serviceImage}>
-                                <img src="/service4.png" alt="Resources" />
+                                <img src="/charlas.png" alt="Resources" />
                             </div>
                             <h3 className={styles.serviceTitle}>Charlas Inspiracionales</h3>
                         </div>
@@ -102,9 +142,7 @@ export default function Home() {
             Nos dedicamos a inspirar y empoderar a niñas y niños en el ámbito STEM, creando un ambiente de aprendizaje colaborativo y estimulante.
             Únete a nosotros en o aporta con una donación
           </p>
-          <Link href="/participate" className={styles.button}>
-            Ver Más
-          </Link>
+      
         </div>
       </section>
             <section id="activities" className={`${styles.section} ${styles.sectionActivities}`}>
@@ -120,37 +158,37 @@ export default function Home() {
 
                     <div className={styles["grid-layout"]}>
                         <div className={styles["grid-item"] + " " + styles["span-2"] + " " + styles["grid-item-10"]}>
-                            <img src="/activity1.png" alt="Robotics" className={styles.mosaicImage} />
+                            <img src="/steam.png" alt="Robotics" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Taller de prototipado social en Pre-ingeniería UC</h3>
                             </div>
                         </div>
                         <div className={styles["grid-item"] + " " + styles["grid-item-12"]}>
-                            <img src="/activity2.png" alt="Programming" className={styles.mosaicImage} />
+                            <img src="/cambio.JPG" alt="Programming" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Formando Agentes de Cambio</h3>
                             </div>
                         </div>
                         <div className={styles["grid-item"] + " " + styles["span-2"] + " " + styles["grid-item-13"]}>
-                            <img src="/activity3.png" alt="Science Experiments" className={styles.mosaicImage} />
+                            <img src="/libro.png" alt="Science Experiments" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Lanzamiento Libro Inspiradoras</h3>
                             </div>
                         </div>
                         <div className={styles["grid-item"] + " " + styles["grid-item-14"]}>
-                            <img src="/activity4.png" alt="3D Printing" className={styles.mosaicImage} />
+                            <img src="/cap_mujeres.jpg" alt="3D Printing" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Red Más Mujeres en STEM en UOH</h3>
                             </div>
                         </div>
                         <div className={styles["grid-item"] + " " + styles["grid-item-15"]}>
-                            <img src="/activity5.png" alt="Mathematics" className={styles.mosaicImage} />
+                            <img src="/ra.png" alt="Mathematics" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Taller de RA en Independencia</h3>
                             </div>
                         </div>
                         <div className={styles["grid-item"] + " " + styles["grid-item-16"]}>
-                            <img src="/activity6.png" alt="Engineering" className={styles.mosaicImage} />
+                            <img src="/encriptado.png" alt="Engineering" className={styles.mosaicImage} />
                             <div className={styles.mosaicOverlay}>
                                 <h3 className={styles.mosaicTitle}>Taller de ciberseguridad en Santa Cruz</h3>
                             </div>
@@ -165,34 +203,68 @@ export default function Home() {
 
 
 
-            {/* Contact Section - with API Integration */}
+            {/* Contact Section - with Contact Form */}
             <section id="contact" className={`${styles.section} ${styles.sectionContact}`}>
                 <div className={styles.content}>
-                    <h1 className={styles.title}>Contact Us</h1>
+                    <h1 className={styles.title}>Contactanos</h1>
                     <p className={styles.text}>
-                        We'd love to hear from you! Whether you have questions, want to collaborate,
-                        or are interested in our programs, feel free to reach out. Together, we can
-                        make a lasting difference in STEM education and create opportunities for all.
+                        ¡Nos encantaría saber de ti! Ya sea que tengas preguntas, quieras colaborar o estés interesado en nuestros programas, no dudes en ponerte en contacto con nosotros. Juntos, podemos marcar una diferencia duradera en la educación STEM y crear oportunidades para todos.
                     </p>
 
-                    {/* API Data Display */}
-                    <div className={styles.apiData}>
-                        {loading && <p className={styles.apiStatus}>Loading backend data...</p>}
-                        {error && <p className={styles.apiError}>Error: {error}</p>}
-                        {apiData && (
-                            <div className={styles.apiSuccess}>
-                                <p><strong>Backend Status:</strong> {apiData.status}</p>
-                                <p><strong>Message:</strong> {apiData.message}</p>
-                                {apiData.data && (
-                                    <p><strong>Organization:</strong> {apiData.data.organization}</p>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                    {/* Contact Form */}
+                    <form onSubmit={handleSubmit} className={styles.contactForm}>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="name" className={styles.formLabel}>Nombre</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className={styles.formInput}
+                                required
+                                placeholder="Tu nombre"
+                            />
+                        </div>
 
-                    <Link href="/contact" className={styles.button}>
-                        Ver Más
-                    </Link>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="email" className={styles.formLabel}>Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                className={styles.formInput}
+                                required
+                                placeholder="tu@email.com"
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="message" className={styles.formLabel}>Mensaje</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                value={formData.message}
+                                onChange={handleInputChange}
+                                className={styles.formTextarea}
+                                required
+                                placeholder="Escribe tu mensaje aquí..."
+                                rows="5"
+                            />
+                        </div>
+
+                        <button type="submit" className={styles.submitButton}>
+                            Enviar Mensaje
+                        </button>
+
+                        {formStatus && (
+                            <p className={styles.formStatus}>{formStatus}</p>
+                        )}
+                    </form>
+
+                   
                 </div>
             </section>
              <footer className={styles.footer}>

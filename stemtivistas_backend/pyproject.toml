@@ -15,6 +15,19 @@ authors = [
 dependencies = [
     "Flask>=3.0.0",
     "Flask-CORS>=4.0.0",
+    "Flask-Bcrypt",
+    "psycopg2-binary", # Use "PyMySQL" if you have a MySQL database
+    "PyJWT",
+    "python-dotenv",
+    "sqlalchemy",
+    "boto3",
+    "gunicorn",
+    "uvicorn",
+    "fastapi",
+    "passlib",
+    "pydantic",
+    "typing",
+    "email_validator",
 ]
 
 [project.optional-dependencies]
