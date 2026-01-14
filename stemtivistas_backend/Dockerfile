@@ -45,4 +45,4 @@ EXPOSE 8000
 # Command to run the FastAPI application with Gunicorn managing Uvicorn workers.
 # 'app:app' assumes your FastAPI app instance is named 'app' in 'app.py'
 # located at the root of your WORKDIR (/home/appuser/code/app.py).
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "app.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "app:app"]

@@ -29,6 +29,7 @@ export default function Home() {
         const fetchContactData = async () => {
             setLoading(true)
             try {
+                console.log(process.env.NEXT_PUBLIC_API_URL )
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
                 const response = await axios.get(`${apiUrl}/api/hello`)
                 setApiData(response.data)
