@@ -287,13 +287,7 @@ export default function Home() {
                     </ul>
                 </div>
                 
-                <div className={styles.footerSection}>
-                    <h4 className={styles.footerSubtitle}>Contacto</h4>
-                    <ul className={styles.footerLinks}>
-                        <li>hola@tonico.cl</li>
-                  
-                    </ul>
-                </div>
+                
             </div>
             
             <div className={styles.footerBottom}>
